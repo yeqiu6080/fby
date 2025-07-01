@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>y68普通云</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif;
+            transition: background-color 0.5s ease, color 0.3s ease;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #1a2a6c, #2c3e50);
+            color: #fff;
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        body.light-mode {
+            background: linear-gradient(135deg, #64b3f4, #c2e59c);
+            color: #333;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            animation: fadeIn 1s ease-out;
+            position: relative;
+            width: 100%;
+            max-width: 800px;
+        }
+        
+        .theme-switch {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 20px;
+            padding: 8px 15px;
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
+        
+        .light-mode .theme-switch {
+            background: rgba(0, 0, 0, 0.05);
+            border: 1px solid rgba(0, 0, 0, 0.1);
+        }
+        
+        .theme-switch i {
+            margin-right: 5px;
+            font-size: 1.2rem;
+        }
+        
+        .logo {
+            font-size: 3.5rem;
+            margin-bottom: 15px;
+            color: #4fc3f7;
+        }
+        
+        .light-mode .logo {
+            color: #2196F3;
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.2);
+        }
+        
+        .light-mode h1 {
+            text-shadow: 0 2px 10px rgba(255,255,255,0.3);
+        }
+        
+        .tagline {
+            font-size: 1.2rem;
+            opacity: 0.8;
+            max-width: 600px;
+            margin: 10px auto 0;
+            font-weight: normal;
+        }
+        
+        .light-mode .tagline {
+            color: #555;
+        }
+        
+        .container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 30px;
+            max-width: 1200px;
+            width: 100%;
+        }
+        
+        .server-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 25px;
+            width: 100%;
+            max-width: 500px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .light-mode .server-card {
+            background: rgba(255, 255, 255, 0.7);
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+        
+        .server-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
+            background: rgba(255, 255, 255, 0.15);
+        }
+        
+        .light-mode .server-card:hover {
+            background: rgba(255, 255, 255, 0.8);
+        }
+        
+        .card-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .light-mode .card-header {
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+        }
+        
+        .flag {
+            font-size: 3rem;
+            margin-right: 20px;
+        }
+        
+        .location {
+            flex: 1;
+        }
+        
+        .location h2 {
+            font-size: 1.8rem;
+            margin-bottom: 5px;
+        }
+        
+        .light-mode .location h2 {
+            color: #2c3e50;
+        }
+        
+        .location p {
+            color: #aaa;
+            font-size: 1rem;
+        }
+        
+        .light-mode .location p {
+            color: #666;
+        }
+        
+        .latency {
+            background: rgba(76, 175, 80, 0.2);
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+        }
+        
+        .light-mode .latency {
+            background: rgba(46, 204, 113, 0.2);
+        }
+        
+        .latency i {
+            margin-left: 5px;
+        }
+        
+        .server-info {
+            margin-bottom: 20px;
+        }
+        
+        .info-item {
+            display: flex;
+            margin-bottom: 12px;
+        }
+        
+        .info-item i {
+            width: 30px;
+            color: #4fc3f7;
+            font-size: 1.2rem;
+        }
+        
+        .light-mode .info-item i {
+            color: #2196F3;
+        }
+        
+        .server-link {
+            display: block;
+            background: linear-gradient(45deg, #2196F3, #21CBF3);
+            color: white;
+            text-align: center;
+            padding: 15px;
+            border-radius: 10px;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(33, 150, 243, 0.3);
+        }
+        
+        .light-mode .server-link {
+            box-shadow: 0 4px 15px rgba(33, 150, 243, 0.2);
+        }
+        
+        .server-link:hover {
+            transform: scale(1.03);
+            box-shadow: 0 6px 20px rgba(33, 150, 243, 0.5);
+        }
+        
+        .server-link i {
+            margin-left: 8px;
+        }
+        
+        .footer {
+            margin-top: 40px;
+            text-align: center;
+            opacity: 0.7;
+            font-size: 0.9rem;
+        }
+        
+        .light-mode .footer {
+            color: #555;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .server-card {
+                max-width: 100%;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+            
+            .logo {
+                font-size: 3rem;
+            }
+            
+            .tagline {
+                font-size: 1rem;
+            }
+            
+            .theme-switch {
+                top: 5px;
+                right: 5px;
+                padding: 6px 12px;
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="theme-switch" id="themeToggle">
+            <i class="fas fa-moon"></i> <span>夜间模式</span>
+        </div>
+        <div class="logo">
+            <i class="fas fa-cloud"></i>
+        </div>
+        <h1>y68普通云</h1>
+        <p class="tagline">卡顿正常·离谱慢速·随时跑路</p>
+    </div>
+    
+    <div class="container">
+		<div class="server-card">
+            <div class="card-header">
+                <div class="flag">🇯🇵</div>
+                <div class="location">
+                    <h2>主力节点</h2>
+                    <p>ap-northeast Japan</p>
+                </div>
+                <div class="latency" data-url="https://lhjuzwdzplny.ap-northeast-1.clawcloudrun.com/">
+                    <span id="jp-latency">检测中...</span>
+                    <i class="fas fa-sync-alt"></i>
+                </div>
+            </div>
+            
+            <div class="server-info">
+                <div class="info-item">
+                    <i class="fas fa-server"></i>
+                    <div>服务器位置: 日本 (ap-northeast-1)</div>
+                </div>
+                <div class="info-item">
+                    <i class="fas fa-network-wired"></i>
+                    <div>线路提供商: ClawCloud Run</div>
+                </div>
+            </div>
+            
+            <a href="https://lhjuzwdzplny.ap-northeast-1.clawcloudrun.com/" class="server-link" target="_blank">
+                访问此节点 <i class="fas fa-external-link-alt"></i>
+            </a>
+        </div>
+		
+        <div class="server-card">
+            <div class="card-header">
+                <div class="flag">🇺🇸</div>
+                <div class="location">
+                    <h2>备用节点</h2>
+                    <p>us-west</p>
+                </div>
+                <div class="latency" data-url="https://iyxadsyzhykc.us-west-1.clawcloudrun.com/">
+                    <span id="us-latency">检测中...</span>
+                    <i class="fas fa-sync-alt"></i>
+                </div>
+            </div>
+            
+            <div class="server-info">
+                <div class="info-item">
+                    <i class="fas fa-server"></i>
+                    <div>服务器位置: 美国西部 (us-west-1)</div>
+                </div>
+                <div class="info-item">
+                    <i class="fas fa-network-wired"></i>
+                    <div>线路提供商: ClawCloud Run</div>
+                </div>
+            </div>
+            
+            <a href="https://iyxadsyzhykc.us-west-1.clawcloudrun.com/" class="server-link" target="_blank">
+                访问此节点 <i class="fas fa-external-link-alt"></i>
+            </a>
+        </div>
+    </div>
+    
+    <div class="footer">
+        <p>© 2025 y68普通云</p>
+    </div>
+    
+    <script>
+        // 根据时间自动切换日间/夜间模式
+        function setThemeBasedOnTime() {
+            const now = new Date();
+            const hour = now.getHours();
+            const isDayTime = hour >= 6 && hour < 18;
+            
+            if (isDayTime) {
+                document.body.classList.add('light-mode');
+                document.getElementById('themeToggle').innerHTML = '<i class="fas fa-moon"></i> <span>夜间模式</span>';
+            } else {
+                document.body.classList.remove('light-mode');
+                document.getElementById('themeToggle').innerHTML = '<i class="fas fa-sun"></i> <span>日间模式</span>';
+            }
+        }
+        
+        // 手动切换主题
+        document.getElementById('themeToggle').addEventListener('click', function() {
+            document.body.classList.toggle('light-mode');
+            
+            if (document.body.classList.contains('light-mode')) {
+                this.innerHTML = '<i class="fas fa-moon"></i> <span>夜间模式</span>';
+            } else {
+                this.innerHTML = '<i class="fas fa-sun"></i> <span>日间模式</span>';
+            }
+            
+            // 保存用户偏好
+            localStorage.setItem('themePreference', document.body.classList.contains('light-mode') ? 'light' : 'dark');
+        });
+        
+        // 应用保存的主题偏好
+        function applySavedTheme() {
+            const savedTheme = localStorage.getItem('themePreference');
+            
+            if (savedTheme === 'light') {
+                document.body.classList.add('light-mode');
+                document.getElementById('themeToggle').innerHTML = '<i class="fas fa-moon"></i> <span>夜间模式</span>';
+            } else if (savedTheme === 'dark') {
+                document.body.classList.remove('light-mode');
+                document.getElementById('themeToggle').innerHTML = '<i class="fas fa-sun"></i> <span>日间模式</span>';
+            } else {
+                setThemeBasedOnTime();
+            }
+        }
+        
+        // 测量真实延迟
+        function measureLatency(url, elementId) {
+            const startTime = performance.now();
+            const element = document.getElementById(elementId);
+            const icon = element.parentElement.querySelector('i');
+            
+            // 添加旋转动画
+            icon.style.animation = 'spin 1s linear infinite';
+            
+            // 使用图片加载测量延迟
+            const img = new Image();
+            img.src = url + '?t=' + new Date().getTime();
+            
+            img.onload = function() {
+                const latency = Math.round(performance.now() - startTime);
+                element.textContent = `${latency}ms`;
+                icon.style.animation = '';
+            };
+            
+            img.onerror = function() {
+                const latency = Math.round(performance.now() - startTime);
+                element.textContent = `${latency}ms`;
+                icon.style.animation = '';
+            };
+        }
+        
+        // 重新检测延迟
+        document.querySelectorAll('.latency').forEach(el => {
+            el.addEventListener('click', function() {
+                const url = this.getAttribute('data-url');
+                const elementId = this.querySelector('span').id;
+                this.querySelector('span').textContent = '检测中...';
+                
+                setTimeout(() => {
+                    measureLatency(url, elementId);
+                }, 100);
+            });
+        });
+        
+        // 页面加载时初始化
+        document.addEventListener('DOMContentLoaded', function() {
+            // 应用主题
+            applySavedTheme();
+            
+            // 初始延迟检测
+            setTimeout(() => {
+                measureLatency('https://iyxadsyzhykc.us-west-1.clawcloudrun.com/', 'us-latency');
+                measureLatency('https://lhjuzwdzplny.ap-northeast-1.clawcloudrun.com/', 'jp-latency');
+            }, 1000);
+        });
+    </script>
+</body>
+</html>
